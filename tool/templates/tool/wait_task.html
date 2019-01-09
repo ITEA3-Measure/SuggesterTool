@@ -1,0 +1,52 @@
+{% extends 'tool/base.html' %}
+
+{% block head %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/spin.js/1.2.7/spin.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div id='form_div'>
+    </div>
+{% endblock %}
+
+{% block jquery %}
+var opts = {
+    lines: 10, // The number of lines to draw
+    length: 7, // The length of each line
+    width: 4, // The line thickness
+    radius: 10, // The radius of the inner circle
+    corners: 1, // Corner roundness (0..1)
+    rotate: 0, // The rotation offset
+    color: '#000', // #rgb or #rrggbb
+    speed: 1, // Rounds per second
+    trail: 60, // Afterglow percentage
+    shadow: false, // Whether to render a shadow
+    hwaccel: false, // Whether to use hardware acceleration
+    className: 'spinner', // The CSS class to assign to the spinner
+    zIndex: 2e9, // The z-index (defaults to 2000000000)
+    top: 25, // Top position relative to parent in px
+    left: 25 // Left position relative to parent in px
+};
+var target = document.getElementById('form_div')
+var spinner = new Spinner(opts)
+spinner.spin(target)
+var endpoint = "{% url 'api_task_state' task_id %}"
+doPoll()
+
+function doPoll(){
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+        success: function(data){
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            }
+            setTimeout(doPoll,5000);
+        },
+        error: function(error_data){
+            console.log("error")
+            console.log(error_data)
+        },
+    })
+}
+{% endblock %}

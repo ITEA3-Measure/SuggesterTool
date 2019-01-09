@@ -1,0 +1,33 @@
+{% extends 'tool/base.html' %}
+
+{% block content %}
+<h2>Measurement Plans</h2>
+<p>Available measurement plans:</p>
+<table class="table table-hover">
+    <thead>
+        <tr>
+        {% for title in row_titles %}
+        <th>{{ title }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for plan in plans %}
+    <tr class='clickable-row' data-href="{% url 'plan_view' plan.plan_id %}">
+        <td>{{ plan.plan_id }}</td>
+        <td>{{ plan.n_features}}</td>
+        <td>{{ plan.classes }}</td>
+        <td>{{ plan.metrics }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block jquery %}
+jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    });
+});
+{% endblock %}

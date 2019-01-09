@@ -1,0 +1,43 @@
+{% extends 'tool/base.html' %}
+
+{% block head %}
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div id="bar" style="width:800px;height:600px;"></div>
+</div>
+{% endblock %}
+
+{% block jquery %}
+var endpoint = "{% url 'api_prediction_data' primary_key %}"
+n_predictions = 0
+x = y = []
+
+$.ajax({
+    method: "GET",
+    url: endpoint,
+    success: function(data) {
+        x = data.x
+        y = data.y
+        barplot()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    },
+})
+
+function barplot() {
+    var data = [
+        {
+            x: x,
+            y: y,
+            type: 'bar'
+        }
+    ];
+
+    Plotly.newPlot('bar', data);
+}
+{% endblock %}

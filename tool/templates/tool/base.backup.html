@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Suggestion Tool</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Suggestion Tool</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="{% if nbar == 'home' %}active{% endif %}"><a href="{% url 'tool_index' %}">Home</a></li>
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Classifier<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Current Classifier</a></li>
+                    <li><a href="#">Model Selection</a></li>
+                </ul>
+            </li>
+            <li class="{% if nbar == 'suggestions' %}active{% endif %}"><a href="{% url 'suggestions_all' %}">Suggestions</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+<script>
+$(document).ready(function(){
+    {% block jquery %}
+    {% endblock %}
+})
+</script>
+</body>
+</html>

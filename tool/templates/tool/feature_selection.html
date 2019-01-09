@@ -1,0 +1,52 @@
+{% extends 'tool/base.html' %}
+
+{% block head %}
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div id="line_chart" style="width:800px;height:400px;"></div>
+</div>
+{% endblock %}
+
+{% block jquery %}
+var endpoint = "{% url 'api_feature_selection_scores' 5 %}"
+var xValues = yValues = []
+
+$.ajax({
+    method: "GET",
+    url: endpoint,
+    success: function(data){
+        xValues = data.x
+        yValues = data.y
+        line_chart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    },
+})
+
+function line_chart(){
+    var trace = {
+        x: xValues,
+        y: yValues,
+        mode: 'lines+markers'
+    };
+
+    var data = [trace];
+
+    var layout = {
+        xaxis: {
+            title: 'Number of features selected'
+        },
+        yaxis: {
+            title: 'Cross validation score (nb of correct classifications)'
+        }
+    };
+
+    Plotly.newPlot('line_chart', data, layout);
+}
+
+{% endblock %}

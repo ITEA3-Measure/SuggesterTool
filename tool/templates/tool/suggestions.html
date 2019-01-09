@@ -1,0 +1,26 @@
+{% extends 'tool/base.html' %}
+
+{% block content %}
+<h2>Suggested Plans</h2>
+<p>Table with the results from the suggestion process:</p>
+<table class="table table-hover">
+    <thead>
+        <tr>
+        {% for title in row_titles %}
+        <th>{{ title }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for suggestion in suggestions %}
+    <tr>
+        <td>{{ suggestion.classes_of_interest }}</td><!-- 3 -->
+        <td>{{ suggestion.n_instances }}</td>
+        <td>{{ suggestion.classifier_id }}</td>
+        <td>{{ suggestion.removed_features }}</td>
+        <td>{{ suggestion.execution_time }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

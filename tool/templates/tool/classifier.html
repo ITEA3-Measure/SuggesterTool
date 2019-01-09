@@ -1,0 +1,95 @@
+{% extends 'tool/base.html' %}
+
+{% block head %}
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div id="heatmap" style="width:800px;height:400px;"></div>
+</div>
+{% endblock %}
+
+{% block jquery %}
+var endpoint = "{% url 'api_svc_heatmap_data' primary_key %}"
+var xValues = yValues = zValues = []
+
+$.ajax({
+    method: "GET",
+    url: endpoint,
+    success: function(data){
+        xValues = data.x.map(function(num){ 
+            return "g:" + num.toString()
+        });
+        yValues = data.y.map(function(num){ 
+            return "C:" + num.toString()
+        });
+        zValues = data.z
+        console.log(yValues)
+        console.log(xValues)
+        heatmap()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    },
+})
+
+function heatmap(){
+
+    var data = [{
+        x: xValues,
+        y: yValues,
+        z: zValues,
+        type: 'heatmap',
+        colorscale: 'Portland'
+    }];
+    
+    var layout = {
+        title: 'CV Heatmap',
+        annotations: [],
+        xaxis: {
+            ticks: '',
+            side: 'top'
+        },
+        yaxis: {
+            ticks: '',
+            ticksuffix: ' ',
+            width: 700,
+            height: 700,
+            autosize: false
+        }
+    };
+
+    for ( var i = 0; i < yValues.length; i++ ) {
+        for ( var j = 0; j < xValues.length; j++ ) {
+            var currentValue = zValues[i][j];
+            if (currentValue != 0.0) {
+                var textColor = 'white';
+            } else {
+                var textColor = 'black';
+            }
+            var result = {
+                xref: 'x1',
+                yref: 'y1',
+                x: xValues[j],
+                y: yValues[i],
+                text: (zValues[i][j]).toFixed(2),
+                font: {
+                    family: 'Arial',
+                    size: 12,
+                    color: 'rgb(50, 171, 96)'
+                },
+                showarrow: false,
+                font: {
+                    color: textColor
+                }
+            };
+            layout.annotations.push(result);
+        }
+    }
+
+    Plotly.newPlot('heatmap', data, layout);
+}
+
+{% endblock %}

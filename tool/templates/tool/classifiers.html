@@ -1,0 +1,32 @@
+{% extends 'tool/base.html' %}
+
+{% block content %}
+<h2>Classifiers</h2>
+<p>Available classifiers:</p>
+<table class="table table-hover">
+    <thead>
+        <tr>
+        {% for title in row_titles %}
+        <th>{{ title }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for classifier in classifiers %}
+    <tr class='clickable-row' data-href="{% url 'classifier_view' classifier.svc_id %}">
+        <td>{{ classifier.svc_id }}</td>
+        <td>{{ classifier.kernel}}</td>
+        <td>{{ classifier.cv_score }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block jquery %}
+jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    });
+});
+{% endblock %}
